@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{base::layout(~{::section})}">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<section>
+		<div class="container p-5">
+			<p class="text-center fs-3 mt-4 mb-4">Admin Dashboard</p>
+			<div class="row mb-4 mt-4">
+				<div class="col">
+					<a href="/admin/loadAddProduct" class="text-decoration-none">
+						<div class="card card-sh">
+							<div class="card-body text-center text-primary">
+								<i class="fa-regular fa-square-plus fa-3x"></i>
+								<p class="fs-5">Add Product</p>
+							</div>
+						</div>
+					</a>
+				</div>
+				
+				<div class="col">
+					<a href="/admin/category" class="text-decoration-none">
+						<div class="card card-sh">
+							<div class="card-body text-center text-warning">
+								<i class="fa-solid fa-list fa-3x"></i>
+								<p class="fs-5">Add Category</p>
+							</div>
+						</div>
+					</a>
+				</div>
+				
+				<div class="col">
+					<a href="#" class="text-decoration-none">
+						<div class="card card-sh">
+							<div class="card-body text-center text-success">
+								<i class="fa-solid fa-table-list fa-3x"></i>
+								<p class="fs-5">View Product</p>
+							</div>
+						</div>
+					</a>
+				</div>
+			</div>
+			
+			<div class="row">
+				
+				<div class="col">
+					<a href="#" class="text-decoration-none">
+						<div class="card card-sh">
+							<div class="card-body text-center text-warning">
+								<i class="fa-solid fa-box-open fa-3x"></i>
+								<p class="fs-5">Orders</p>
+							</div>
+						</div>
+					</a>
+				</div>
+				
+				<div class="col">
+					<a href="#" class="text-decoration-none">
+						<div class="card card-sh">
+							<div class="card-body text-center text-primary">
+								<i class="fa-solid fa-circle-user fa-3x"></i>
+								<p class="fs-5">Users</p>
+							</div>
+						</div>
+					</a>
+				</div>
+				
+				<div class="col">
+					<a href="#" class="text-decoration-none">
+						<div class="card card-sh">
+							<div class="card-body text-center text-primary">
+								<i class="fa-solid fa-user-plus fa-3x"></i>
+								<p class="fs-5">Add Admin</p>
+							</div>
+						</div>
+					</a>
+				</div>
+			</div>
+		</div>
+	</section>
+</body>
+</html>
