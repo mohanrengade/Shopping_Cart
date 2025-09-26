@@ -49,7 +49,8 @@ public class AdminController {
 	}
 
 	@GetMapping("/loadAddProduct")
-	public String loadAddProduct(Model m) {
+	public String loadAddProduct(Model m) 
+	{
 		List<Category> categories = categoryService.getAllCategory();
 		m.addAttribute("categories", categories);
 		return "admin/add_product";
@@ -63,35 +64,49 @@ public class AdminController {
 
 	@PostMapping("/saveCategory")
 	public String saveCategory(@ModelAttribute Category category, @RequestParam("file") MultipartFile file,
-			HttpSession session) {
-		try {
-			String imageName = "default.jpg";
+			HttpSession session) 
+	{
+		try 
+		{
+				String imageName = file.isEmpty() ? "default.jpg" : file.getOriginalFilename();
+				category.setImageName(imageName);
 
-			if (file != null && !file.isEmpty()) {
-				imageName = file.getOriginalFilename();
+			if (file != null && !file.isEmpty()) 
+			{
+				String uploadDir ="src/main/resources/static/img/category_img/";
+				Path uploadPath = Paths.get(uploadDir);
 
-				// Save uploaded image in /static/img/category/
-				File saveFile = new ClassPathResource("static/img/category_img/").getFile();
-				Path path = Paths.get(saveFile.getAbsolutePath() + File.separator + imageName);
+				if (!Files.exists(uploadPath)) 
+				{
+					Files.createDirectories(uploadPath);
+				}
 
-				Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+				Path filePath = uploadPath.resolve(imageName);
+				Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 			}
-
-			// Set image name into DB object
+			
 			category.setImageName(imageName);
 
-			// Check duplicate category
-			if (categoryService.existCategory(category.getName())) {
+			if (categoryService.existCategory(category.getName())) 
+			{
 				session.setAttribute("errorMsg", "Category name already exists. Please try another.");
-			} else {
+			} 
+			else 
+			{
 				Category savedCategory = categoryService.saveCategory(category);
-				if (savedCategory != null) {
+				
+				if (savedCategory != null) 
+				{
 					session.setAttribute("successMsg", "Category saved successfully.");
-				} else {
+				}
+				else 
+				{
 					session.setAttribute("errorMsg", "Not saved! Internal server error.");
 				}
 			}
-		} catch (Exception e) {
+		} 
+		catch(Exception e) 
+		{
 			session.setAttribute("errorMsg", "Something went wrong: " + e.getMessage());
 		}
 
@@ -99,11 +114,16 @@ public class AdminController {
 	}
 
 	@GetMapping("/deleteCategory/{id}")
-	public String deleteCategory(@PathVariable int id, HttpSession session) {
+	public String deleteCategory(@PathVariable int id, HttpSession session) 
+	{
 		Boolean deleteCategory = categoryService.deleteCategory(id);
-		if (deleteCategory) {
+		
+		if (deleteCategory) 
+		{
 			session.setAttribute("successMsg", "Category deleted successfully...");
-		} else {
+		}
+		else 
+		{
 			session.setAttribute("errorMsg", "Something wrong on server...");
 		}
 		return "redirect:/admin/category";
@@ -141,46 +161,45 @@ public class AdminController {
 
 	@PostMapping("/saveProduct")
 	public String saveProduct(@ModelAttribute Product product, @RequestParam("file") MultipartFile image,
-			HttpSession session) {
-		try {
-			// 1️⃣ Set image name
+			HttpSession session) 
+	{
+		try 
+		{
 			String imageName = image.isEmpty() ? "default.jpg" : image.getOriginalFilename();
 			product.setImageName(imageName);
 
-			// 2️⃣ Save product to DB
-			System.out.println("Before:" +product);
 			Product savedProduct = productService.saveProduct(product);
-			System.out.println("After: "+product);
-			// 3️⃣ Save uploaded image to folder
-			if (savedProduct != null && !image.isEmpty()) {
-				// Folder outside classpath (works in IDE and JAR)
-				String uploadDir = System.getProperty("user.dir") + "/uploads/product_img/";
+			
+			if (savedProduct != null && !image.isEmpty()) 
+			{
+				String uploadDir ="src/main/resources/static/img/product_img/";
 				Path uploadPath = Paths.get(uploadDir);
 
-				// Create folder if it doesn't exist
-				if (!Files.exists(uploadPath)) {
+				if (!Files.exists(uploadPath)) 
+				{
 					Files.createDirectories(uploadPath);
 				}
 
-				// Save file
 				Path filePath = uploadPath.resolve(imageName);
 				Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 			}
 
-			// 4️⃣ Set success message
-			if (savedProduct != null) {
-				System.out.println("Saved product: " + savedProduct); // ID will be generated
-				session.setAttribute("successMsg", "Product saved successfully!");
-			} else {
+			if (savedProduct != null) 
+			{
+				session.setAttribute("successMsg", "Product saved successfully...");
+			} 
+			else 
+			{
 				session.setAttribute("errorMsg", "Something went wrong on server");
 			}
 
-		} catch (Exception e) {
-		    e.printStackTrace(); // Logs full stack trace in console
+		} 
+		catch (Exception e) 
+		{
+		    e.printStackTrace();
 		    session.setAttribute("errorMsg", "Something went wrong: " + e.getMessage());
+		    System.out.println("Before:" +product);
 		}
-
-
 		return "redirect:/admin/loadAddProduct";
 	}
 }

@@ -8,14 +8,15 @@ import com.ecom.repository.ProductRepository;
 import com.ecom.service.ProductService;
 
 @Service
-public class ProductServiceImpl implements ProductService
+public class ProductServiceImpl implements ProductService 
 {
-	@Autowired
-	private ProductRepository productRepository;
-	
-	@Override
-	public Product saveProduct(Product product)
-	{
-		return null;
-	}
+
+    @Autowired
+    private ProductRepository productRepository;
+
+    @Override
+    public Product saveProduct(Product product) 
+    {
+        return productRepository.save(product);
+    }
 }
